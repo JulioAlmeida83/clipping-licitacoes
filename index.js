@@ -594,16 +594,6 @@ ${informativos}
     <strong style="color:#2e7d32;">🎯 Filtros Booleanos Identificados:</strong><br>${gruposFormatados}</div>`;
   }
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
-  secure: false,
-  auth: {
-    user: 'apikey',
-    pass: process.env.SENDGRID_API_KEY
-  }
-});
-
   const corpoEmail = `
   <html>
   <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
@@ -625,16 +615,28 @@ const transporter = nodemailer.createTransport({
   </body>
   </html>`;
 
+  // ENVIO VIA SENDGRID API HTTP (em vez de SMTP bloqueado)
   try {
-    await transporter.sendMail({
-      from: `"Clipping NLC/PGE/SP" <${CONFIG.EMAIL.from}>`,
-      to: CONFIG.EMAIL.to,
-      subject: `📡 Clipping Executivo com RSS Feeds – ${new Date().toLocaleDateString('pt-BR')}`,
-      html: corpoEmail
+    const response = await axios.post('https://api.sendgrid.com/v3/mail/send', {
+      personalizations: [{
+        to: CONFIG.EMAIL.to.split(',').map(email => ({ email: email.trim() })),
+        subject: `📡 Clipping Executivo com RSS Feeds – ${new Date().toLocaleDateString('pt-BR')}`
+      }],
+      from: { email: CONFIG.EMAIL.from, name: 'Clipping NLC/PGE/SP' },
+      content: [{
+        type: 'text/html',
+        value: corpoEmail
+      }]
+    }, {
+      headers: {
+        'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
     });
-    console.log('✅ Relatório enviado com sucesso!');
+    
+    console.log('✅ Relatório enviado com sucesso via SendGrid API!');
   } catch (erro) {
-    console.error('❌ Erro ao enviar e-mail:', erro.message);
+    console.error('❌ Erro ao enviar e-mail:', erro.response?.data || erro.message);
   }
 }
 
@@ -727,4 +729,5 @@ function iniciarSistema() {
 }
 
 iniciarSistema();
+
 
