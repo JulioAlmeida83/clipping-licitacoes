@@ -593,10 +593,15 @@ ${informativos}
     <strong style="color:#2e7d32;">🎯 Filtros Booleanos Identificados:</strong><br>${gruposFormatados}</div>`;
   }
 
-  const transporter = nodemailer.createTransport({
-    service: CONFIG.EMAIL.service,
-    auth: { user: CONFIG.EMAIL.from, pass: CONFIG.EMAIL.password }
-  });
+const transporter = nodemailer.createTransport({
+  host: 'smtp.sendgrid.net',
+  port: 587,
+  secure: false,
+  auth: {
+    user: 'apikey',
+    pass: process.env.SENDGRID_API_KEY
+  }
+});
 
   const corpoEmail = `
   <html>
