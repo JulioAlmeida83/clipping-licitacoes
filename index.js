@@ -1,3 +1,4 @@
+// Updated
 const fetch = require('node-fetch');
 const cron = require('node-cron');
 const nodemailer = require('nodemailer');
@@ -726,3 +727,4 @@ function iniciarSistema() {
 }
 
 iniciarSistema();
+
