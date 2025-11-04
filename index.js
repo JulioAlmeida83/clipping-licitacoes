@@ -452,7 +452,7 @@ async function buscarPNCP() {
 
 async function buscarComprasSPComprasNet() {
   const prompt = `Liste comunicados, notícias e atualizações da SGGD/SP publicados no Compras.sp e ComprasNet/Compras.gov.br NAS ÚLTIMAS 24H. Inclua: comunicados SGGD/SILOG, mudanças em sistemas, instruções Lei 14.133, índices de reajuste, centralizações. Formato: • Título (data) – Órgão/Portal, Resumo 1 linha, Link. Se não houver: "Nenhuma novidade."`;
-  return await buscarPerplexity(prompt, [...CONFIG.FONTES.comprasPublicas, 'compras.sp.gov.br', 'sggd.sp.gov.br']);
+  return await buscarPerplexity(prompt, [...CONFIG.FONTES.comprasPublicas, 'compras.sp.gov.br', 'sggd.sp.gov.br', https://compras.sp.gov.br/noticias/, https://compras.sp.gov.br/agente-publico/comunicados/]);
 }
 
 async function buscarAtosNormativos() {
@@ -729,5 +729,6 @@ function iniciarSistema() {
 }
 
 iniciarSistema();
+
 
 
